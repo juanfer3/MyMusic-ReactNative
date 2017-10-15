@@ -15,7 +15,8 @@ import {
   TouchableHighlight,
   Modal,
   Alert,
-  Image
+  Image,
+  ScrollView
 } from 'react-native';
 
 import Icon from 'react-native-vector-icons/MaterialIcons';

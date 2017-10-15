@@ -16,7 +16,8 @@ import {
   TouchableHighlight,
   Modal,
   Alert,
-  Image
+  Image,
+  ScrollView
 } from 'react-native';
 
 import Icon from 'react-native-vector-icons/MaterialIcons';
@@ -38,13 +39,18 @@ export default class App extends Component<{}> {
       comment: 150
    }
     return (
-      <View style={styles.container}>
+      <ScrollView style={styles.container}>
+      {
+        array(6).fill(artist).map(artist => {
+         return  <ArtistBox artist={artist}/>
+        })
+      }
         <ArtistBox artist={artist}/>
         <ArtistBox artist={artist}/>
         <ArtistBox artist={artist}/>
         <ArtistBox artist={artist}/>
 
-      </View>
+      </ScrollView>
     );
   }
 }
