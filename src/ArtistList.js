@@ -22,7 +22,7 @@ import {
 } from 'react-native';
 
 import Icon from 'react-native-vector-icons/MaterialIcons';
-import ArtistBox from './src/ArtistBox';
+import ArtistBox from './ArtistBox';
 
 const instructions = Platform.select({
   ios: 'hola juanfer Press Cmd+R to reload,\n' +
@@ -31,20 +31,24 @@ const instructions = Platform.select({
     'Shake or press menu button for dev menu',
 });
 
-export default class App extends Component<{}> {
-  constructor() {
+export default class ArtistList extends Component<{}> {
+  constructor(props) {
     super();
     const ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
-    const artist={
-      imagen:'https://lastfm-img2.akamaized.net/i/u/300x300/84141376f72f1a6a43a9d8ea1c695ab1.jpg',
-      name: 'Andy Shouf',
-      like: 205,
-      comment: 150
-   }
-   const artists = Array(30).fill(artist);
+
+   //const artists = Array(30).fill(artist);
     this.state = {
-      dataSource: ds.cloneWithRows(artists),
+      dataSource: ds.cloneWithRows(props.artists),
     };
+  }
+  componentWillReceiveProps(newProps){
+    if(newProps.artists !== this.props.artists){
+      //console.warn('cambio la lista');
+      this.setState({
+        dataSource: this.state.dataSource.cloneWithRows(newProps.artists)
+      })
+    }
+
   }
   render() {
 

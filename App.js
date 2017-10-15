@@ -22,7 +22,8 @@ import {
 } from 'react-native';
 
 import Icon from 'react-native-vector-icons/MaterialIcons';
-import ArtistBox from './src/ArtistBox';
+import ArtistList from './src/ArtistList';
+import { getArtists } from './src/api-Client'
 
 const instructions = Platform.select({
   ios: 'hola juanfer Press Cmd+R to reload,\n' +
@@ -32,27 +33,24 @@ const instructions = Platform.select({
 });
 
 export default class App extends Component<{}> {
-  constructor() {
-    super();
-    const ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
-    const artist={
-      imagen:'https://lastfm-img2.akamaized.net/i/u/300x300/84141376f72f1a6a43a9d8ea1c695ab1.jpg',
-      name: 'Andy Shouf',
-      like: 205,
-      comment: 150
-   }
-   const artists = Array(30).fill(artist);
-    this.state = {
-      dataSource: ds.cloneWithRows(artists),
-    };
+
+  state = {
+    artists:[]
   }
+
+  componentDidMount(){
+    getArtists()
+      .then(data => this.setState({artists: data}))
+  }
+
   render() {
 
+   const artists = this.state.artists
+   console.warn('artists', artists);
     return (
-      <ListView
-        dataSource={this.state.dataSource}
-        renderRow={(artist) => <ArtistBox artist={artist}/>}
-      />
+      <View style={styles.container}>
+        <ArtistList artists={artists}/>
+      </View>
       //<ArtistBox artist={artist}/>
 
     );
@@ -62,7 +60,7 @@ export default class App extends Component<{}> {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#e8f5e9',
+    backgroundColor: '#fff3e0',
     paddingTop: 50
   },
   artistBox: {
