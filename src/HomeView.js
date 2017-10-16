@@ -18,14 +18,12 @@ import {
   Alert,
   Image,
   ScrollView,
-  ListView,
-  TouchableOpacity
+  ListView
 } from 'react-native';
 
-import {Actions} from 'react-native-router-flux';
-
 import Icon from 'react-native-vector-icons/MaterialIcons';
-import ArtistBox from './ArtistBox';
+import ArtistList from './ArtistList';
+import { getArtists } from './api-Client'
 
 const instructions = Platform.select({
   ios: 'hola juanfer Press Cmd+R to reload,\n' +
@@ -34,44 +32,25 @@ const instructions = Platform.select({
     'Shake or press menu button for dev menu',
 });
 
-export default class ArtistList extends Component<{}> {
-  constructor(props) {
-    super();
-    const ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
+export default class HomeView extends Component<{}> {
 
-   //const artists = Array(30).fill(artist);
-    this.state = {
-      dataSource: ds.cloneWithRows(props.artists),
-    };
+  state = {
+    artists:[]
   }
-  componentWillReceiveProps(newProps){
-    if(newProps.artists !== this.props.artists){
-      //console.warn('cambio la lista');
-      this.setState({
-        dataSource: this.state.dataSource.cloneWithRows(newProps.artists)
-      })
-    }
 
-  }
-  handlePress(artist){
-    //console.warn('artist', artist);
-    Actions.artistDetail({ artist: artist });//si es el mismo nombre de parametro { artist }
+  componentDidMount(){
+    getArtists()
+      .then(data => this.setState({artists: data}))
   }
 
   render() {
 
+   const artists = this.state.artists
+   console.warn('artists', artists);
     return (
-      <ListView
-        dataSource={this.state.dataSource}
-        renderRow={(artist) =>{
-          return(
-            <TouchableOpacity
-              onPress={()=>this.handlePress(artist)}>
-              <ArtistBox artist={artist}/>
-            </TouchableOpacity>
-          )
-          }}
-      />
+      <View style={styles.container}>
+        <ArtistList artists={artists}/>
+      </View>
       //<ArtistBox artist={artist}/>
 
     );
@@ -79,7 +58,11 @@ export default class ArtistList extends Component<{}> {
 }
 
 const styles = StyleSheet.create({
-
+  container: {
+    flex: 1,
+    backgroundColor: '#fff3e0',
+    paddingTop: 50
+  },
   artistBox: {
     backgroundColor: '#b2dfdb',
     flexDirection: 'row',
